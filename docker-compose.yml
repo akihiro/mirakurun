@@ -7,6 +7,8 @@ mirakurun:
     - /etc/localtime:/etc/localtime:ro
     # for configration
     - ./etc:/usr/local/etc/mirakurun/:ro
+    # database store
+    - ./db:/usr/local/var/db/mirakurun:rw
     # expose mirakurun socket
     - /var/run/:/var/run/:rw
     # access for pccard reader
