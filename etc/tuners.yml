@@ -2,7 +2,7 @@
   types:
     - BS
     - CS
-  command: tune 0 <channel>
+  command: tune++ 0 <channel>
   dvbDevicePath: /dev/dvb/adapter0/dvr0
   decoder: arib-b25-stream-test
   isDisabled: false
@@ -10,7 +10,7 @@
 - name: PT3-T0
   types:
     - GR
-  command: tune 1 <channel>
+  command: tune++ 1 <channel>
   dvbDevicePath: /dev/dvb/adapter1/dvr0
   decoder: arib-b25-stream-test
   isDisabled: false
@@ -19,7 +19,7 @@
   types:
     - BS
     - CS
-  command: tune 2 <channel>
+  command: tune++ 2 <channel>
   dvbDevicePath: /dev/dvb/adapter2/dvr0
   decoder: arib-b25-stream-test
   isDisabled: false
@@ -27,7 +27,7 @@
 - name: PT3-T1
   types:
     - GR
-  command: tune 3 <channel>
+  command: tune++ 3 <channel>
   dvbDevicePath: /dev/dvb/adapter3/dvr0
   decoder: arib-b25-stream-test
   isDisabled: false
@@ -36,7 +36,7 @@
   types:
     - BS
     - CS
-  command: tune 4 <channel>
+  command: tune++ 4 <channel>
   dvbDevicePath: /dev/dvb/adapter4/dvr0
   decoder: arib-b25-stream-test
   isDisabled: false
@@ -44,7 +44,7 @@
 - name: PT3-T2
   types:
     - GR
-  command: tune 5 <channel>
+  command: tune++ 5 <channel>
   dvbDevicePath: /dev/dvb/adapter5/dvr0
   decoder: arib-b25-stream-test
   isDisabled: false
@@ -53,7 +53,7 @@
   types:
     - BS
     - CS
-  command: tune 6 <channel>
+  command: tune++ 6 <channel>
   dvbDevicePath: /dev/dvb/adapter6/dvr0
   decoder: arib-b25-stream-test
   isDisabled: false
@@ -61,7 +61,7 @@
 - name: PT3-T3
   types:
     - GR
-  command: tune 7 <channel>
+  command: tune++ 7 <channel>
   dvbDevicePath: /dev/dvb/adapter7/dvr0
   decoder: arib-b25-stream-test
   isDisabled: false
