@@ -16,5 +16,5 @@ docker run --cap-add SYS_ADMIN --cap-add SYS_NICE --device /dev/dvb/:/dev/dvb -v
 example configuration files in /etc
 
 - tunners.yml: PT3 for dvb driver:earth_pt3 (not chardev driver:pt3-drv) x2
-- channels.yml: Tokyo area GR channel only
+- channels.yml: Tokyo area GR channels and BS/CS channels
 - server.yml: minimal configuration
