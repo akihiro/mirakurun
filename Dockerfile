@@ -9,3 +9,7 @@ RUN apk add -u linux-headers
 RUN cd /tmp/tune++ && make && make install
 
 ADD [ "etc/", "/usr/local/etc/mirakurun/"]
+
+ADD server.js /usr/lib/node_modules/mirakurun/lib/server.js
+RUN adduser -D -u 1000 node
+USER node
