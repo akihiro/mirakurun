@@ -1,0 +1,91 @@
+#!/bin/bash
+
+ldd=ldd
+ldconfig=/sbin/ldconfig
+
+excludedir=()
+ignoredir=()
+while :; do
+  token="$1"
+  case "$token" in
+  -e)
+    excludedir+=( "$2" )
+    shift 2;
+    ;;
+  -x)
+    ignoredir+=( "$2" )
+    shift 2;
+    ;;
+  *) break ;;
+  esac
+done
+
+rootfs=`readlink -f "$1"`
+excludedir+=( "$rootfs" )
+command="$2"
+
+copydir() {
+  local dir="$1"
+  local uid=$(stat --format="%u" "$dir")
+  local gid=$(stat --format="%g" "$dir")
+  local mode=$(stat --format="%a" "$dir")
+  install -d -o "$uid" -g "$gid" -m "$mode" "${rootfs}/$dir"
+}
+
+exist() {
+  local dir=
+  for dir in "${ignoredir[@]}"; do
+    [[ $1 != ${1#$dir} ]] && return 0
+  done
+  for dir in "${excludedir[@]}"; do
+    [[ -e $dir/$1 ]] && return 0
+  done
+  return 1
+}
+
+_copy() {
+  local src="$1"
+  [[ -z $src ]] && return 0
+  [[ -e $rootfs/$src ]] && return 0
+  _copy "${src%/*}"
+  if [[ -d "$src" ]]; then
+    copydir "$src"
+  elif [[ -L "$src" ]];then
+    copy "$(readlink -f "$src")"
+    cp -a "$src" "${rootfs}/$src"
+  else
+    cp -a "$src" "${rootfs}/$src"
+  fi
+}
+
+copy() {
+  exist "$1" && return 0
+  _copy "$1"
+}
+
+: copy binary
+copy "$command"
+
+: parse binary and check dependancy libraries
+while read line; do
+  [[ $line =~ linux-vdso.so ]] && continue
+  tokens=( $line )
+  case "${#tokens[@]}" in
+  2)
+    [[ ${tokens[0]} =~ linux-vdso.so ]] && continue
+    if [[ ${tokens[0]} =~ ^/ ]]; then
+      copy "${tokens[0]}"
+    fi
+    ;;
+  4) 
+    [[ ${tokens[2]} == not ]] && continue
+    copy "${tokens[2]}";;
+  esac
+done <<<"$($ldd "$command")"
+
+: build ld.so.conf
+_copy /etc/ld.so.conf
+for f in /etc/ld.so.conf.d/*; do
+  _copy "$f"
+done
+"$ldconfig" -i -r "$rootfs"

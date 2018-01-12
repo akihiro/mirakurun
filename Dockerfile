@@ -19,6 +19,27 @@ RUN apt-get update \
 ADD tune++ /tmp/tune++
 RUN cd /tmp/tune++ && make && make install
 
+RUN mkdir -p -m 777 /chroot/tmp/ /chroot/var/run/ /chroot/var/tmp/
+COPY passwd /chroot/etc/
+COPY group /chroot/etc/
+
+RUN cd /usr/src/app && set -- $(grep -v -F -e node_modules -e lib .dockerignore) && rm -rf "$@"
+
+ADD extract /
+RUN /extract /node /usr/local/bin/node
+RUN /extract -e /node /chroot /bin/cat
+RUN /extract -e /node /chroot /usr/bin/renice
+RUN /extract -e /node /chroot /usr/bin/ionice
+RUN /extract -e /node /chroot /usr/local/bin/tune++
+RUN /extract -e /node /chroot /usr/local/bin/arib-b25-stream-test
+RUN cp -a /etc/ld.so.cache /chroot/etc/ld.so.cache
+RUN rm -rf /chroot/etc/ld.so.conf /chroot/etc/ld.so.conf.d/
+RUN mkdir -p /chroot/usr/src/ && cp -a /usr/src/app/ /chroot/usr/src/app/
+ADD etc/ /chroot/usr/local/etc/mirakurun/
+
+FROM scratch
+COPY --from=0 /node/ /
+COPY --from=0 /chroot/ /
 WORKDIR /usr/src/app/
 ENV NODE_ENV production
 CMD [ "node", "--max_old_space_size=256", "lib/server.js" ]
