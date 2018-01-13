@@ -29,8 +29,6 @@ COPY group /chroot/etc/
 ADD extract /
 COPY --from=node /node/ /node/
 RUN /extract -e /node /chroot /bin/cat
-RUN /extract -e /node /chroot /usr/bin/renice
-RUN /extract -e /node /chroot /usr/bin/ionice
 RUN /extract -e /node /chroot /usr/local/bin/tune++
 RUN /extract -e /node /chroot /usr/local/bin/arib-b25-stream-test
 RUN cp -a /etc/ld.so.cache /chroot/etc/ld.so.cache
