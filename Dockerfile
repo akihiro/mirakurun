@@ -3,16 +3,16 @@ ADD extract /
 RUN /extract /node /usr/local/bin/node
 
 FROM node:8 as app
+WORKDIR /usr/src/app
 ADD patch /tmp/patch
-RUN mkdir -p /usr/src/app \
- && cd /usr/src/app \
- && git clone https://github.com/Chinachu/Mirakurun.git . \
- && xargs rm -rf <.dockerignore \
- && for i in /tmp/patch/*.patch; do patch -p1 <$i ; done \
- && DOCKER=YES npm install \
- && DOCKER=YES npm run build \
+RUN git clone https://github.com/Chinachu/Mirakurun.git . \
+ && xargs rm -rf <.dockerignore
+RUN for i in /tmp/patch/*.patch; do patch -p1 <$i ; done
+ARG DOCKER=YES
+RUN npm install \
+ && npm run build \
  && rm -rf node_modules \
- && DOCKER=YES npm install --production --unsafe
+ && npm install --production --unsafe
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends libpcsclite-dev \
