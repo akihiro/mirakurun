@@ -1,5 +1,8 @@
-FROM node:8
+FROM node:8 as node
+ADD extract /
+RUN /extract /node /usr/local/bin/node
 
+FROM node:8 as app
 ADD patch /tmp/patch
 RUN mkdir -p /usr/src/app \
  && cd /usr/src/app \
@@ -26,7 +29,7 @@ COPY group /chroot/etc/
 RUN cd /usr/src/app && set -- $(grep -v -F -e node_modules -e lib .dockerignore) && rm -rf "$@"
 
 ADD extract /
-RUN /extract /node /usr/local/bin/node
+COPY --from=node /node/ /node/
 RUN /extract -e /node /chroot /bin/cat
 RUN /extract -e /node /chroot /usr/bin/renice
 RUN /extract -e /node /chroot /usr/bin/ionice
@@ -38,8 +41,8 @@ RUN mkdir -p /chroot/usr/src/ && cp -a /usr/src/app/ /chroot/usr/src/app/
 ADD etc/ /chroot/usr/local/etc/mirakurun/
 
 FROM scratch
-COPY --from=0 /node/ /
-COPY --from=0 /chroot/ /
+COPY --from=node /node/ /
+COPY --from=app /chroot/ /
 WORKDIR /usr/src/app/
 ENV NODE_ENV production
 CMD [ "node", "--max_old_space_size=256", "lib/server.js" ]
