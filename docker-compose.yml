@@ -10,13 +10,8 @@ mirakurun:
     # database store
     - ./db:/usr/local/var/db/mirakurun:rw
     # expose mirakurun socket
-    - /var/run/:/var/run/:rw
+    - ./run/:/var/run/:rw
     # access for pccard reader
     - /var/run/pcscd/pcscd.comm:/var/run/pcscd/pcscd.comm:rw
-  cap_add:
-    # for nice -10
-    - SYS_NICE
-    # for ionice
-    - SYS_ADMIN
   ports:
     - 40772:40772
