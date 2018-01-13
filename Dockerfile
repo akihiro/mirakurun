@@ -7,6 +7,7 @@ ADD patch /tmp/patch
 RUN mkdir -p /usr/src/app \
  && cd /usr/src/app \
  && git clone https://github.com/Chinachu/Mirakurun.git . \
+ && xargs rm -rf <.dockerignore \
  && for i in /tmp/patch/*.patch; do patch -p1 <$i ; done \
  && DOCKER=YES npm install \
  && DOCKER=YES npm run build \
@@ -25,9 +26,6 @@ RUN cd /tmp/tune++ && make && make install
 RUN mkdir -p -m 777 /chroot/tmp/ /chroot/var/run/ /chroot/var/tmp/
 COPY passwd /chroot/etc/
 COPY group /chroot/etc/
-
-RUN cd /usr/src/app && set -- $(grep -v -F -e node_modules -e lib .dockerignore) && rm -rf "$@"
-
 ADD extract /
 COPY --from=node /node/ /node/
 RUN /extract -e /node /chroot /bin/cat
