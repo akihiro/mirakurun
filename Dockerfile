@@ -1,4 +1,4 @@
-FROM node:alpine as app
+FROM node:8-alpine as app
 
 RUN apk -U add --no-cache git make gcc g++ autoconf automake libc-dev pcsc-lite-dev linux-headers
 
@@ -24,7 +24,7 @@ RUN mv /usr/src/app /chroot/usr/src/app
 RUN mv /usr/local/lib/node_modules/arib-b25-stream-test/bin/b25 /chroot/usr/local/bin/arib-b25-stream-test
 RUN mv /tmp/tune++/tune++ /chroot/usr/local/bin/tune++
 
-FROM node:alpine
+FROM node:8-alpine
 RUN apk add --no-cache pcsc-lite-libs
 COPY --from=app /chroot /
 WORKDIR /usr/src/app/
