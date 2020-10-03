@@ -1,17 +1,20 @@
-mirakurun:
-  image: mhiroaki/mirakurun
-  devices:
-    # access for capture card
-    - /dev/dvb:/dev/dvb
-  volumes:
-    - /etc/localtime:/etc/localtime:ro
-    # for configration
-    - ./etc:/usr/local/etc/mirakurun/:ro
-    # database store
-    - ./db:/usr/local/var/db/mirakurun:rw
-    # expose mirakurun socket
-    - ./run/:/var/run/:rw
-    # access for pccard reader
-    - /var/run/pcscd/pcscd.comm:/var/run/pcscd/pcscd.comm:rw
-  ports:
-    - 40772:40772
+version: "2.3"
+services:
+  mirakurun:
+    image: mhiroaki/mirakurun
+    init: true
+    devices:
+      # access for capture card
+      - /dev/dvb:/dev/dvb
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # for configration
+      - ./etc:/usr/local/etc/mirakurun/:ro
+      # database store
+      - ./db:/usr/local/var/db/mirakurun:rw
+      # expose mirakurun socket
+      - ./run/:/var/run/:rw
+      # access for pccard reader
+      - /var/run/pcscd/pcscd.comm:/var/run/pcscd/pcscd.comm:rw
+    ports:
+      - 40772:40772
