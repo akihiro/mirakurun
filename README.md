@@ -11,11 +11,14 @@ docker run \
   -v /path/to/db:/usr/local/var/db/mirakurun \
   -v /var/run/pcscd/pcscd.comm:/var/run/pcscd/pcscd.comm:rw \
   --device /dev/dvb/:/dev/dvb \
+  --user 1:44 \
   mhiroaki/mirakurun
 ```
 
 - Need run pcscd on host
 - see also docker-compose.yml
+- require uid option since default uid is set to 1001
+  - root or 1:44(debian case: video:44 group can read access to the devices)
 
 ## Configuration
 

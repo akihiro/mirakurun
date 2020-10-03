@@ -6,6 +6,7 @@ services:
     devices:
       # access for capture card
       - /dev/dvb:/dev/dvb
+    user: "1:44"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       # for configration
